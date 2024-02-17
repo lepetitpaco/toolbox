@@ -4,7 +4,7 @@ The `project` file is responsible for generating and handling short URLs. It all
 
 ### File Structure
 
-The `project` file is located in the `toolbox.lepetitpaco.com/tiny` directory. It includes the following files:
+The `project` file is located in the `lepetitpaco.com/tiny` directory. It includes the following files:
 
 - `README.md`: The current file that you are viewing.
 

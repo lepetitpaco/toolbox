@@ -1,5 +1,13 @@
 <?php include('../login_redirect.php'); ?>
 <?php
+  // Load environment variables
+  require __DIR__ . '/../vendor/autoload.php';
+  require __DIR__ . '/../../config/config.php';
+  $dotenv = Dotenv\Dotenv::createImmutable(getEnvFilePath());
+  $dotenv->load();
+  $token = $_ENV['DISCORDTOKEN'];
+?>
+<?php
 $userid = $_GET['id'] ?? '152431535914614785';
 $curl = curl_init();
 curl_setopt_array(
@@ -13,9 +21,9 @@ curl_setopt_array(
     CURLOPT_FOLLOWLOCATION => true,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => 'GET',
-    CURLOPT_HTTPHEADER => array(
-      'Authorization: Bot ODY4NDEwMTgwMzkwNDkwMTEz.YPvQAQ.ltqJ0fKw9DHF6KkuAwK6vCX0TXI',
-    ),
+    CURLOPT_HTTPHEADER => [
+      'Authorization: Bot '. $token,
+    ],
   )
 );
 

@@ -7,7 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Load environment variables
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../../config/config.php';
 $dotenv = Dotenv\Dotenv::createImmutable(getEnvFilePath());
 $dotenv->load();
@@ -59,7 +59,7 @@ if (isset($_POST['url'])) {
 
         if ($result) {
             // URL stored successfully
-            $shortUrl = 'https://toolbox.lepetitpaco.com/tiny/' . $shortCode;
+            $shortUrl = 'https://lepetitpaco.com/tiny/' . $shortCode;
         } else {
             // Error handling
             echo "Error creating short URL.";
