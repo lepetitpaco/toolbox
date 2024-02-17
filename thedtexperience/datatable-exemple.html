@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Datatable</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css"
+    />
+  </head>
+
+  <body>
+    <div>
+      <label for="name_search">Search by Name</label>
+      <input type="text" id="name_search" placeholder="Search by name" />
+    </div>
+    <div>
+      <label for="country_search">Search by Country</label>
+      <select id="country_search">
+        <option value="">ALL</option>
+      </select>
+    </div>
+    <table id="myTable">
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Age</th>
+          <th>Birthday</th>
+          <th>City of Birth</th>
+          <th>Country of Origin</th>
+        </tr>
+      </tfoot>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script src="datatable-exemple.js"></script>
+  </body>
+</html>
