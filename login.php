@@ -13,7 +13,8 @@ $dotenv->load();
 $credentials = array(
   $_ENV['USERNAME1'] => $_ENV['PASSWORD1'],
   $_ENV['USERNAME2'] => $_ENV['PASSWORD2'],
-
+  $_ENV['USERNAME3'] => $_ENV['PASSWORD3'],
+  $_ENV['USERNAME4'] => $_ENV['PASSWORD4'],
 );
 
 // Start the session
