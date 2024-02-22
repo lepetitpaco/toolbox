@@ -1,6 +1,12 @@
 {
     "require": {
         "vlucas/phpdotenv": "^5.5",
-        "guzzlehttp/guzzle": "^7.8"
+        "guzzlehttp/guzzle": "^7.8",
+        "cboden/ratchet": "^0.4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "WordCounter\\": "word_counter/src/WordCounter/"
+        }
     }
 }
