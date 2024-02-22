@@ -6,7 +6,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WordCounter\\": "word_counter/src/WordCounter/"
+            "WordCounter\\": "compteur/src/WordCounter/"
         }
     }
 }
