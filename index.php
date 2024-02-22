@@ -25,65 +25,69 @@ $forbidden_folders = array('vendor');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boîte à Outils - Le Petit Paco</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .jumbotron {
-            background-color: #f8f9fa;
-            color: #212529;
-            border-radius: 0;
-            text-align: justify;
-            margin-bottom: 20px;
-        }
+    <title>Useless shit you won't need anyways but you got access to it so you might as well try and suffer a bit. Well
+        fuck I'm tired of this life I wish I could code a button that ends me on the spot but I can't even do that, fml,
+        I'm going to watch animes.</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    .jumbotron {
+        background-color: #f8f9fa;
+        color: #212529;
+        border-radius: 0;
+        text-align: justify;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
 
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+    .card {
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
 
-        .card {
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+    .card:hover {
+        transform: translateY(-5px);
+        text-decoration: none;
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            text-decoration: none;
-        }
+    .card-body {
+        padding: 1.25rem;
+        text-align: center;
+    }
 
-        .card-body {
-            padding: 1.25rem;
-            text-align: center;
-        }
-
-        .card-title {
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-        }
-    </style>
+    .card-title {
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+    }
+</style>
 </head>
 
 <body>
 
     <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4">Bienvenue dans la Boîte à Outils</h1>
-            <p class="lead">Ici, vous ne trouverez probablement pas ce dont vous avez besoin en ce moment, mais je vous
-                propose d'autres choses dont vous n'aurez pas besoin. Ma collection d'outils est vaste et variée, et je
-                suis
-                sûr que vous trouverez quelque chose dont vous n'avez pas besoin. <br> Mes outils sont conçus pour être
-                une
-                vraie prise de tête et compliqués à utiliser, même si vous en avez besoin.</p>
-            <hr class="my-4">
-            <p>Explorez mes sous-dossiers pour trouver les outils dont vous n'avez pas besoin. Nous espérons que vous
-                trouverez mon site inutile.</p>
+        <div class="row">
+            <div class="col-12">
+                <div class="jumbotron">
+                    <h1 class="display-4">Welcome to the Toolbox</h1>
+                    <p class="lead">Hey there! Looking for something you probably won't find here? Well, you're in luck!
+                        Dive
+                        into my treasure trove of useless stuff. My collection of tools is as vast and varied as it
+                        gets,
+                        offering you an array of things you definitely don't need. But hey, why not have some fun
+                        exploring
+                        anyway?</p>
+                    <hr class="my-4 bg-light">
+                    <p>My tools are like puzzles – frustratingly complicated, even when you're desperate. So, if you're
+                        ready to
+                        embark on a journey of unnecessary complexity, you've come to the right place.</p>
+                </div>
+            </div>
         </div>
 
         <div class="row">
             <?php
             // Directories to exclude from the loop
-            $excluded_dirs = ['anilist', 'vendor'];
+            $excluded_dirs = ['vendor'];
 
             foreach ($dirs as $dir):
                 $dir_name = basename($dir);

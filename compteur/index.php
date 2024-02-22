@@ -1,5 +1,5 @@
 <?php
-    include('../login_redirect.php');
+    // include('../login_redirect.php');
 ?>
 
 <!DOCTYPE html>
