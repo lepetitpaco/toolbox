@@ -69,7 +69,7 @@ $(document).ready(function () {
         conn.onmessage = function (e) {
             try {
                 var message = JSON.parse(e.data);
-                console.log("Received message:", message);
+                // console.log("Received message:", message);
                 // Handle initial data load and updates differently if needed
                 if (message.type === 'initialData') {
                     updateWordList(message.data); // Assuming the server sends the initial data structured this way
@@ -82,15 +82,12 @@ $(document).ready(function () {
             }
         };
 
-
-
         conn.onerror = function (error) {
             console.error("WebSocket Error: ", error);
             // Optionally implement reconnection logic or notify the user
             setTimeout(connectWebSocket, 5000); // Reconnect after 5 seconds
         };
     }
-
 
     connectWebSocket(); // Connect WebSocket initially
 
