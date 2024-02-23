@@ -31,7 +31,7 @@ $(document).ready(function () {
             // Initialize the sound buttons with the received list of sound files
             var soundFiles = message.sounds;
             soundFiles.forEach(function (fileName) {
-                var soundButton = $('<button class="sound-btn">' + fileName + '</button>');
+                var soundButton = $('<button class="btn btn-primary sound-btn m-2">' + fileName + '</button>');
                 soundButton.click(function () {
                     playSound(fileName);
                 });
