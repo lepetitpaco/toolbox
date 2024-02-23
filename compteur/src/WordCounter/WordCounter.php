@@ -61,43 +61,89 @@ class WordCounter implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
+        // Decode the received JSON message
         $data = json_decode($msg, true);
-        error_log('Message received: ' . $msg);
+        $action = $data['action'] ?? '';
 
-        if (isset($data['action'])) {
-            switch ($data['action']) {
-                case 'add':
-                    // Broadcast a message without inserting into the database
-                    $word = $data['word']; // Assuming 'word' is passed in the message
-                    $this->broadcast(['message' => "Word added: $word", 'data' => $data]);
-                    break;
-                case 'remove':
-                    // Broadcast a message without removing from the database
-                    $word = $data['word']; // Assuming 'word' is passed in the message
-                    $this->broadcast(['message' => "Word removed: $word", 'data' => $data]);
-                    break;
-                case 'increment':
-                    // Broadcast a message without updating count in the database
-                    $word = $data['word']; // Assuming 'word' is passed in the message
-                    $this->broadcast(['message' => "Word count incremented for: $word", 'data' => $data]);
-                    break;
-                case 'decrement':
-                    // Broadcast a message without updating count in the database
-                    $word = $data['word']; // Assuming 'word' is passed in the message
-                    $this->broadcast(['message' => "Word count decremented for: $word", 'data' => $data]);
-                    break;
-                case 'rename':
-                    // Broadcast a message without updating count in the database
-                    $oldWord = $data['oldWord']; // Assuming 'oldWord' is passed in the message
-                    $newWord = $data['newWord']; // Assuming 'newWord' is passed in the message
-                    $this->broadcast(['message' => "Word renamed from '$oldWord' to '$newWord'", 'data' => $data]);
-                    break;
-                default:
-                    error_log("Invalid action: " . $data['action']);
-                    $this->broadcast(['error' => 'Invalid action']);
-                    break;
-            }
+        switch ($action) {
+            case 'fetchInitialData':
+                // Fetch the initial data from the database
+                $initialData = $this->fetchUpdatedDataFromDatabase();
+                // Send the initial data back to the client
+                $from->send(json_encode([
+                    'type' => 'initialData', // Indicate the type of data being sent
+                    'data' => $initialData // The actual word list data
+                ]));
+                break;
+            default:
+                // If the action is not 'fetchInitialData', process other actions
+                if (!empty($action)) {
+                    // Perform the action by updating the database
+                    $this->performAction($action, $data);
+                    // After action is performed, handle the event by fetching updated data and broadcasting
+                    $this->handleEvent(['action' => $action]);
+                } else {
+                    // Handle case where action is not recognized or is missing
+                    $from->send(json_encode(['error' => 'Invalid action']));
+                }
+                break;
         }
+    }
+    private function performAction($action, $data)
+    {
+        // Initialize variables to avoid undefined variable errors
+        $word = $data['word'] ?? '';
+        $newWord = $data['newWord'] ?? ''; // Only used in the 'rename' action
+
+        error_log("displaying datas before switch : " . print_r($data, true));
+
+        switch ($action) {
+            case 'add':
+                $stmt = $this->dbConnection->prepare("INSERT INTO word_count (word, count) VALUES (?, 1) ON DUPLICATE KEY UPDATE count = count + 1");
+                $stmt->bind_param("s", $word);
+                break;
+
+            case 'remove':
+                $stmt = $this->dbConnection->prepare("DELETE FROM word_count WHERE word = ?");
+                $stmt->bind_param("s", $word);
+                break;
+
+            case 'increment':
+                $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count + 1 WHERE word = ?");
+                $stmt->bind_param("s", $word);
+                break;
+
+            case 'decrement':
+                $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count - 1 WHERE word = ?");
+                $stmt->bind_param("s", $word);
+                break;
+
+            case 'rename':
+                $stmt = $this->dbConnection->prepare("UPDATE word_count SET word = ? WHERE word = ?");
+                $stmt->bind_param("ss", $newWord, $word); // Note the double "s" for two string parameters
+                break;
+
+            default:
+                $this->broadcast(['error' => 'Invalid action']);
+                return; // Exit the method early if the action is invalid
+        }
+
+        // Check if the statement was prepared successfully
+        if ($stmt === false) {
+            error_log("Prepare failed: " . $this->dbConnection->error);
+            return;
+        }
+
+        // Execute the prepared statement and check for success
+        if (!$stmt->execute()) {
+            error_log("Execute failed: " . $stmt->error);
+        } else {
+            error_log("Executed with success !!");
+
+        }
+
+        // Close the statement
+        $stmt->close();
     }
 
 
@@ -146,7 +192,7 @@ class WordCounter implements MessageComponentInterface
         while ($row = $result->fetch_assoc()) {
             $data[] = $row;
         }
-        error_log('Fetched data from database: ' . print_r($data, true));
+        // error_log('Fetched data from database: ' . print_r($data, true));
         return $data;
     }
 }
