@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         conn.onopen = function (e) {
             // Fetch initial word data
-            conn.send(JSON.stringify({ action: 'fetchInitialData' }));
+            conn.send(JSON.stringify({ action: 'word_fetchInitialData' }));
 
 
             // Event handler for adding a word
@@ -114,9 +114,11 @@ $(document).ready(function () {
     }
 
     function modifyWord(action, data) {
+
+        
         // Create a message object to send to the WebSocket server
         var message = {
-            action: action,
+            action: 'word_'+action,
             word: data.word, // This will be ignored for the rename action, handled below
             newWord: data.newWord  // Included for rename action
         };
