@@ -31,7 +31,7 @@ try {
     $server = IoServer::factory(
         new HttpServer(
             new WsServer(
-                new WordCounter($connection) // Pass the connection here
+                new WordCounter($connection), // Pass the connection here
             )
         ),
         8090 // The port the WebSocket server will listen on
