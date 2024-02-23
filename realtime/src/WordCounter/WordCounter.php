@@ -1,14 +1,12 @@
 <?php
 
-namespace WordCounter;
+namespace RealTime\WordCounter;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
 class WordCounter implements MessageComponentInterface
 {
-
-
     protected $clients;
     protected $dbConnection; // Property to hold the database connection
 
@@ -66,7 +64,7 @@ class WordCounter implements MessageComponentInterface
         $action = $data['action'] ?? '';
 
         switch ($action) {
-            case 'fetchInitialData':
+            case 'word_fetchInitialData':
                 // Fetch the initial data from the database
                 $initialData = $this->fetchUpdatedDataFromDatabase();
                 // Send the initial data back to the client
@@ -98,27 +96,27 @@ class WordCounter implements MessageComponentInterface
         error_log("displaying datas before switch : " . print_r($data, true));
 
         switch ($action) {
-            case 'add':
+            case 'word_add':
                 $stmt = $this->dbConnection->prepare("INSERT INTO word_count (word, count) VALUES (?, 1) ON DUPLICATE KEY UPDATE count = count + 1");
                 $stmt->bind_param("s", $word);
                 break;
 
-            case 'remove':
+            case 'word_remove':
                 $stmt = $this->dbConnection->prepare("DELETE FROM word_count WHERE word = ?");
                 $stmt->bind_param("s", $word);
                 break;
 
-            case 'increment':
+            case 'word_increment':
                 $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count + 1 WHERE word = ?");
                 $stmt->bind_param("s", $word);
                 break;
 
-            case 'decrement':
+            case 'word_decrement':
                 $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count - 1 WHERE word = ?");
                 $stmt->bind_param("s", $word);
                 break;
 
-            case 'rename':
+            case 'word_rename':
                 $stmt = $this->dbConnection->prepare("UPDATE word_count SET word = ? WHERE word = ?");
                 $stmt->bind_param("ss", $newWord, $word); // Note the double "s" for two string parameters
                 break;
@@ -175,7 +173,7 @@ class WordCounter implements MessageComponentInterface
         $action = $eventData['action'];
 
         // For actions that affect the whole list, fetch and broadcast the updated list
-        if (in_array($action, ['add', 'remove', 'increment', 'decrement', 'rename'])) {
+        if (in_array($action, ['word_add', 'word_remove', 'word_increment', 'word_decrement', 'word_rename'])) {
             $updatedData = $this->fetchUpdatedDataFromDatabase();
             $this->broadcast([
                 'type' => 'update', // Indicate this is an update message
