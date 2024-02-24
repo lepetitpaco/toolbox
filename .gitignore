@@ -2,3 +2,4 @@ composer.phar
 /vendor/
 realtime/compteur/.htaccess
 realtime/compteur/.htpasswd
+realtime/soundboard/sounds
