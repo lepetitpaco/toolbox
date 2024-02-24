@@ -79,7 +79,7 @@ $(document).ready(function () {
 
         $.each(wordData, function (index, item) {
             const wordItem = $(`
-                <div class="word-item d-flex justify-content-between align-items-center bg-light p-3 rounded">
+                <div class="word-item d-flex justify-content-between align-items-center p-3 rounded">
                     <span>${item.word}: <strong>${item.count}</strong></span>
                     <div>
                         <button class="increment-btn btn btn-success me-2" data-word="${item.word}">+</button>
