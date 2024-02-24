@@ -12,7 +12,6 @@ class Soundboard implements MessageComponentInterface
 
     public function __construct($dbConnection)
     {
-        $this->clients = new \SplObjectStorage; // not really used, all the connexions on all websockets
         $this->soundboardClients = new \SplObjectStorage;
         $this->dbConnection = $dbConnection; // Store the database connection
     }
@@ -23,11 +22,10 @@ class Soundboard implements MessageComponentInterface
         $queryParams = [];
         parse_str(parse_url($conn->httpRequest->getUri(), PHP_URL_QUERY), $queryParams);
 
-        error_log('queryparams : ' . print_r($queryParams, true));
+        // error_log('queryparams : ' . print_r($queryParams, true));
 
         // Check if the 'service' query parameter is set to 'soundboard'
         if (isset($queryParams['service']) && $queryParams['service'] === 'soundboard') {
-            error_log('attaching the connecion');
             $this->soundboardClients->attach($conn); // It's a soundboard connection
         }
 
@@ -46,7 +44,7 @@ class Soundboard implements MessageComponentInterface
         $conn->send(json_encode($message));
 
         $connectionId = $conn->resourceId;
-        error_log("New connection opened: " . $connectionId); // Log the opening of a new connection
+        error_log("[Soundboard] New connection opened: " . $connectionId); // Log the opening of a new connection
     }
 
     public function onClose(ConnectionInterface $conn)
@@ -57,12 +55,12 @@ class Soundboard implements MessageComponentInterface
 
         $this->broadcastActiveUsers();
 
-        error_log("Connection removed: " . $connectionId);
+        error_log("[Soundboard] Connection removed: " . $connectionId);
 
         // Close the connection
         $conn->close();
 
-        error_log("Connection closed: " . $connectionId);
+        error_log("[Soundboard] Connection closed: " . $connectionId);
     }
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
@@ -73,7 +71,7 @@ class Soundboard implements MessageComponentInterface
     {
         error_log("Received message: " . $msg); // Log the received message
         $data = json_decode($msg, true);
-        error_log("Decoded action: " . $data['action']); // Log the decoded action
+        // error_log("Decoded action: " . $data['action']); // Log the decoded action
 
         // Ensure $data['action'] is checked to determine the correct course of action
         if (isset($data['action']) && $data['action'] === 'sound_play' && isset($data['sound_file'])) {

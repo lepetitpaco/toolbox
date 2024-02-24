@@ -8,34 +8,44 @@ use Ratchet\ConnectionInterface;
 class WordCounter implements MessageComponentInterface
 {
     protected $clients;
+    protected $wordcounterClients;
     protected $dbConnection; // Property to hold the database connection
 
     public function __construct($dbConnection)
     {
-        $this->clients = new \SplObjectStorage;
+        $this->wordcounterClients = new \SplObjectStorage;
         $this->dbConnection = $dbConnection; // Store the database connection
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
-        // Add the new connection to the clients storage
-        $this->clients->attach($conn);
+        // Parse the query string from the connection URL
+        $queryParams = [];
+        parse_str(parse_url($conn->httpRequest->getUri(), PHP_URL_QUERY), $queryParams);
+
+        // error_log('queryparams : ' . print_r($queryParams, true));
+
+        // Check if the 'service' query parameter is set to 'wordcounter'
+        if (isset($queryParams['service']) && $queryParams['service'] === 'wordcounter') {
+            $this->wordcounterClients->attach($conn); // It's a wordcounter connection
+        }
+
 
         $connectionId = $conn->resourceId;
-        error_log("New connection opened: " . $connectionId); // Log the opening of a new connection
+        error_log("[Word Counter] New connection opened: " . $connectionId); // Log the opening of a new connection
     }
 
     public function onClose(ConnectionInterface $conn)
     {
         $connectionId = $conn->resourceId;
 
-        $this->clients->detach($conn);
-        error_log("Connection removed: " . $connectionId);
+        $this->wordcounterClients->detach($conn);
+        error_log("[Word Counter] Connection removed: " . $connectionId);
 
         // Close the connection
         $conn->close();
 
-        error_log("Connection closed: " . $connectionId);
+        error_log("[Word Counter] Connection closed: " . $connectionId);
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
@@ -74,7 +84,7 @@ class WordCounter implements MessageComponentInterface
         $word = $data['word'] ?? '';
         $newWord = $data['newWord'] ?? ''; // Only used in the 'rename' action
 
-        error_log("displaying datas before switch : " . print_r($data, true));
+        // error_log("displaying datas before switch : " . print_r($data, true));
 
         switch ($action) {
             case 'word_add':
@@ -134,9 +144,9 @@ class WordCounter implements MessageComponentInterface
 
     public function broadcast($data)
     {
-        error_log('Attempting to broadcast to ' . count($this->clients) . ' clients');
-        if (count($this->clients) > 0) {
-            foreach ($this->clients as $client) {
+        error_log('Attempting to broadcast to ' . count($this->wordcounterClients) . ' clients');
+        if (count($this->wordcounterClients) > 0) {
+            foreach ($this->wordcounterClients as $client) {
                 $client->send(json_encode($data));
             }
         } else {
@@ -147,7 +157,7 @@ class WordCounter implements MessageComponentInterface
 
     public function handleEvent($eventData)
     {
-        error_log('handleEvent called with eventData: ' . print_r($eventData, true));
+        // error_log('handleEvent called with eventData: ' . print_r($eventData, true));
 
         // Assuming eventData contains the necessary information about the action
         // and the word(s) affected, you can customize the response based on the action

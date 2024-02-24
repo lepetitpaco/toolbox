@@ -4,7 +4,7 @@ $(document).ready(function () {
     var conn;
 
     function connectWebSocket() {
-        conn = new WebSocket('wss://lepetitpaco.com/ws');
+        conn = new WebSocket('wss://lepetitpaco.com/ws?service=wordcounter');
 
         conn.onopen = function (e) {
             // Fetch initial word data
