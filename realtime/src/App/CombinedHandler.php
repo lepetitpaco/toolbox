@@ -32,10 +32,14 @@ class CombinedHandler implements MessageComponentInterface {
         $data = json_decode($msg, true);
         $action = $data['action'] ?? '';
 
+        error_log("[Combined Handler] \$action: " . $action);
+
         // Route based on action
         if (strpos($action, 'word_') === 0) {
+            error_log("[Combined Handler] word_ prefix");
             $this->wordCounter->onMessage($from, $msg);
         } elseif (strpos($action, 'sound_') === 0) {
+            error_log("[Combined Handler] sound_ prefix");
             $this->soundboard->onMessage($from, $msg);
         } else {
             // Handle unknown action or implement a default action

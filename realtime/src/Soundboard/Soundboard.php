@@ -7,18 +7,33 @@ use Ratchet\ConnectionInterface;
 class Soundboard implements MessageComponentInterface
 {
     protected $clients;
+    protected $soundboardClients;
     protected $dbConnection; // Property to hold the database connection
 
     public function __construct($dbConnection)
     {
         $this->clients = new \SplObjectStorage;
+        $this->soundboardClients = new \SplObjectStorage;
         $this->dbConnection = $dbConnection; // Store the database connection
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
+        // Parse the query string from the connection URL
+        $queryParams = [];
+        parse_str(parse_url($conn->httpRequest->getUri(), PHP_URL_QUERY), $queryParams);
+
+        error_log('queryparams : ' . print_r($queryParams, true));
+
+        // Check if the 'service' query parameter is set to 'soundboard'
+        if (isset($queryParams['service']) && $queryParams['service'] === 'soundboard') {
+            error_log('attaching the connecion');
+            $this->soundboardClients->attach($conn); // It's a soundboard connection
+        }
+
+
         // Add the new connection to the clients storage
-        $this->clients->attach($conn);
+        // $this->clients->attach($conn);
 
         // Broadcast the current number of active users
         $this->broadcastActiveUsers();
@@ -36,36 +51,17 @@ class Soundboard implements MessageComponentInterface
 
         $connectionId = $conn->resourceId;
         error_log("New connection opened: " . $connectionId); // Log the opening of a new connection
-
-        $stmt = $this->dbConnection->prepare("INSERT INTO websocket_connections (connection_id) VALUES (?)");
-        if (!$stmt) {
-            error_log("Prepare statement failed: " . $this->dbConnection->error); // Log prepare statement failure
-        } else {
-            $stmt->bind_param("s", $connectionId);
-            if (!$stmt->execute()) {
-                error_log("Execution failed: " . $stmt->error); // Log execution failure
-            } else {
-                error_log("Inserted new connection into the database: " . $connectionId); // Log successful insertion into the database
-            }
-        }
     }
 
     public function onClose(ConnectionInterface $conn)
     {
         $connectionId = $conn->resourceId;
 
-        $this->clients->detach($conn);
+        $this->soundboardClients->detach($conn);
 
         $this->broadcastActiveUsers();
-        
-        error_log("Connection removed: " . $connectionId);
 
-        // Remove the connection from the database
-        $stmt = $this->dbConnection->prepare("DELETE FROM websocket_connections WHERE connection_id = ?");
-        $stmt->bind_param("s", $connectionId);
-        if (!$stmt->execute()) {
-            error_log("Error deleting connection from the database: " . $stmt->error);
-        }
+        error_log("Connection removed: " . $connectionId);
 
         // Close the connection
         $conn->close();
@@ -93,7 +89,7 @@ class Soundboard implements MessageComponentInterface
     private function playSound($soundFile)
     {
         // Loop through all connected clients and send the sound play action
-        foreach ($this->clients as $client) {
+        foreach ($this->soundboardClients as $client) {
             // Construct the message with the sound file to be played
             $message = [
                 'action' => 'sound_play',
@@ -107,8 +103,8 @@ class Soundboard implements MessageComponentInterface
     // New method to broadcast the number of active users
     private function broadcastActiveUsers()
     {
-        $activeUsers = count($this->clients);
-        foreach ($this->clients as $client) {
+        $activeUsers = count($this->soundboardClients);
+        foreach ($this->soundboardClients as $client) {
             $client->send(json_encode(['type' => 'activeUsers', 'count' => $activeUsers]));
         }
     }
