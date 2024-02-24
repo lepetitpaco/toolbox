@@ -213,5 +213,16 @@ $(document).ready(function () {
             conn.send(JSON.stringify(message)); // Send the play request to the server
         }
     }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+      
     
 });
