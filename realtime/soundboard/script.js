@@ -4,16 +4,8 @@ $(document).ready(function () {
     var globalVolume = 0.2; // Global volume, adjustable via UI
     var activeAudios = []; // Tracks all active Audio objects for volume adjustments
 
+    // By adding a parameter service, we can verify in the server that it is a connection from the soundboard and only displaying the number of soundboard users
     var conn = new WebSocket('wss://lepetitpaco.com/ws?service=soundboard');
-
-    conn.onopen = function () {
-        // Immediately after opening the connection, identify it as a soundboard connection
-        var initMessage = {
-            action: 'sound_init_connection',
-            service: 'soundboard' // This tells the server it's a soundboard connection
-        };
-        conn.send(JSON.stringify(initMessage)); // Send the initial message
-    };
 
     // Handle incoming messages from the WebSocket server
     conn.onmessage = function (e) {

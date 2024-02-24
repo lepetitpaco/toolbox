@@ -10,20 +10,11 @@ $(document).ready(function () {
             // Fetch initial word data
             conn.send(JSON.stringify({ action: 'word_fetchInitialData' }));
 
-
             // Event handler for adding a word
             $('#add-word-btn').click(function () {
                 const word = prompt("Entrez le mot que vous voulez ajouter:");
-                if (word) {
-                    if (confirm(`Es-tu sûr de vouloir ajouter le mot "${word}"?`)) {
-                        if (confirm("Es-tu vraiment, vraiment sûr?")) {
-                            if (confirm("Sérieusement, tu veux absolument faire ça?")) {
-                                if (confirm(`Est-ce que tu veux réellement ajouter ce mot "${word}"?`)) {
-                                    modifyWord('add', { word });
-                                }
-                            }
-                        }
-                    }
+                if (word && confirm(`Es-tu sûr de vouloir ajouter le mot "${word}"?`)) {
+                    modifyWord('add', { word });
                 }
             });
 
@@ -31,40 +22,23 @@ $(document).ready(function () {
             $('#word-list').on('click', '.remove-btn', function () {
                 const word = $(this).data('word');
                 if (confirm(`Es-tu sûr de vouloir supprimer le mot "${word}"?`)) {
-                    if (confirm("Es-tu vraiment, vraiment sûr?")) {
-                        if (confirm("Sérieusement, tu veux absolument faire ça?")) {
-                            if (confirm(`Est-ce que tu veux réellement supprimer ce mot "${word}"?`)) {
-                                modifyWord('remove', { word });
-                            }
-                        }
-                    }
+                    modifyWord('remove', { word });
                 }
             }).on('click', '.increment-btn', function () {
                 const word = $(this).data('word');
-                if (confirm(`Es-tu sûr de vouloir incrémenter le nombre de "${word}"?`)) {
-                    modifyWord('increment', { word });
-                }
+                modifyWord('increment', { word }); // No confirmation for increment
             }).on('click', '.decrement-btn', function () {
                 const word = $(this).data('word');
-                if (confirm(`Es-tu sûr de vouloir décrémenter le nombre de "${word}"?`)) {
-                    modifyWord('decrement', { word });
-                }
+                modifyWord('decrement', { word }); // No confirmation for decrement
             }).on('click', '.rename-btn', function () {
                 const word = $(this).data('word');
                 const newWord = prompt("Entrez le nouveau mot:");
-                if (newWord) {
-                    if (confirm(`Es-tu sûr de vouloir renommer "${word}" en "${newWord}"?`)) {
-                        if (confirm("Es-tu vraiment, vraiment sûr?")) {
-                            if (confirm("Sérieusement, tu veux absolument faire ça?")) {
-                                if (confirm(`Est-ce que tu veux réellement renommer "${word}" en "${newWord}"?`)) {
-                                    modifyWord('rename', { word, newWord });
-                                }
-                            }
-                        }
-                    }
+                if (newWord && confirm(`Es-tu sûr de vouloir renommer "${word}" en "${newWord}"?`)) {
+                    modifyWord('rename', { word, newWord });
                 }
             });
         };
+
 
         conn.onmessage = function (e) {
             try {
@@ -115,10 +89,10 @@ $(document).ready(function () {
 
     function modifyWord(action, data) {
 
-        
+
         // Create a message object to send to the WebSocket server
         var message = {
-            action: 'word_'+action,
+            action: 'word_' + action,
             word: data.word, // This will be ignored for the rename action, handled below
             newWord: data.newWord  // Included for rename action
         };

@@ -23,18 +23,6 @@ class WordCounter implements MessageComponentInterface
 
         $connectionId = $conn->resourceId;
         error_log("New connection opened: " . $connectionId); // Log the opening of a new connection
-
-        // $stmt = $this->dbConnection->prepare("INSERT INTO websocket_connections (connection_id) VALUES (?)");
-        // if (!$stmt) {
-        //     error_log("Prepare statement failed: " . $this->dbConnection->error); // Log prepare statement failure
-        // } else {
-        //     $stmt->bind_param("s", $connectionId);
-        //     if (!$stmt->execute()) {
-        //         error_log("Execution failed: " . $stmt->error); // Log execution failure
-        //     } else {
-        //         error_log("Inserted new connection into the database: " . $connectionId); // Log successful insertion into the database
-        //     }
-        // }
     }
 
     public function onClose(ConnectionInterface $conn)
@@ -43,13 +31,6 @@ class WordCounter implements MessageComponentInterface
 
         $this->clients->detach($conn);
         error_log("Connection removed: " . $connectionId);
-
-        // // Remove the connection from the database
-        // $stmt = $this->dbConnection->prepare("DELETE FROM websocket_connections WHERE connection_id = ?");
-        // $stmt->bind_param("s", $connectionId);
-        // if (!$stmt->execute()) {
-        //     error_log("Error deleting connection from the database: " . $stmt->error);
-        // }
 
         // Close the connection
         $conn->close();

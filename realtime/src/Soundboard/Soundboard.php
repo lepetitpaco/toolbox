@@ -12,7 +12,7 @@ class Soundboard implements MessageComponentInterface
 
     public function __construct($dbConnection)
     {
-        $this->clients = new \SplObjectStorage;
+        $this->clients = new \SplObjectStorage; // not really used, all the connexions on all websockets
         $this->soundboardClients = new \SplObjectStorage;
         $this->dbConnection = $dbConnection; // Store the database connection
     }
@@ -30,10 +30,6 @@ class Soundboard implements MessageComponentInterface
             error_log('attaching the connecion');
             $this->soundboardClients->attach($conn); // It's a soundboard connection
         }
-
-
-        // Add the new connection to the clients storage
-        // $this->clients->attach($conn);
 
         // Broadcast the current number of active users
         $this->broadcastActiveUsers();
