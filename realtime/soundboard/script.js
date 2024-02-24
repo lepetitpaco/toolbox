@@ -43,7 +43,7 @@ $(document).ready(function () {
     function formatFolderName(folder) {
         // If the folder name contains 'hidden', and URL parameters do not allow showing hidden folders, return null
         const urlParams = new URLSearchParams(window.location.search);
-        const showHiddenFolders = urlParams.get('hidden') === 'yes';
+        const showHiddenFolders = urlParams.has('naughty');
         if (folder.toLowerCase().includes('hidden') && !showHiddenFolders) {
             return null;
         }
@@ -120,8 +120,6 @@ $(document).ready(function () {
         });
     }
 
-
-
     // Handle errors
     conn.onerror = function (error) {
         console.error("WebSocket Error: ", error);
@@ -190,10 +188,8 @@ $(document).ready(function () {
             audio.volume = globalVolume; // Apply the current global volume
             activeAudios.push(audio); // Track this audio object
             audio.play().then(() => {
-                // Extract the name from the soundFile object
-                let soundName = soundFile.name.split('/').pop().replace('.mp3', '').replace(/_/g, ' ').replace(/-/g, ' ');
-                // Capitalize the first letter of each word in the sound name
-                soundName = soundName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                let soundName = soundFile.name.split('/').pop(); // Extract file name from path
+                soundName = formatButtonName(soundName);
                 // Show the toast with the sound name
                 $('#soundToast .toast-body').text(`Playing: ${soundName}`);
                 $('#soundToast').toast('show');

@@ -99,6 +99,7 @@ h1 {
     padding: 10px; /* Padding around the text */
     border-radius: 10px; /* Rounded corners */
     z-index: 1000; /* Ensure it sits above other content */
+    pointer-events: none;
 }
 
 /* Updated Folder Styles */
@@ -164,7 +165,7 @@ h1 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border for the header */
 }
 
-.soundboard-title {
+#toastContainer .soundboard-title {
     margin-right: 20px; /* Adjust the value as needed */
 }
 

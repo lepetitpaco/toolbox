@@ -14,7 +14,7 @@
 <body>
     <div id="activeUsers">0</div>
 
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row mb-3">
             <div class="col-12">
                 <h1>Soundboard</h2>
@@ -86,7 +86,7 @@
             <!-- Toast -->
             <div id="soundToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
                 <div class="toast-header">
-                    <strong class="mr-auto soundboard-title">Soundboard</strong>
+                    <strong class="soundboard-title">Soundboard</strong>
                     <small>Just now</small>
                     <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
