@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,48 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
+<div id="activeUsers">0</div>
+
     <div class="container mt-5">
-        <div class="soundboard">
-            <h2>Soundboard</h2>
-            <div id="sound-buttons" class="d-flex flex-wrap justify-content-center">
-                <!-- Sound buttons will be dynamically inserted here -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <h1>Soundboard</h2>
+            </div>
+        </div>
+
+        <!-- Container for Sound Controls and Soundboard -->
+
+        <!-- Row for Sound Controls -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="sound-controls d-flex align-items-center justify-content-between">
+                    <button id="stopAllSounds" class="btn btn-warning">Stop All Sounds</button>
+                    <div>
+                        <label for="volumeSlider" class="form-label me-2">Volume:</label>
+                        <input type="range" id="volumeSlider" class="form-range" min="0" max="1" step="0.01"
+                            value="0.2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Soundboard -->
+        <div class="row">
+            <div class="col-12">
+                <div class="soundboard">
+                    <div id="sound-buttons" class="d-flex flex-wrap justify-content-center">
+                        <!-- Sound buttons will be dynamically inserted here -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Audio Disclaimer Modal -->
-    <div class="modal fade" id="audioDisclaimerModal" tabindex="-1" role="dialog" aria-labelledby="audioDisclaimerModalLabel" aria-hidden="true">
+    <div class="modal fade" id="audioDisclaimerModal" tabindex="-1" role="dialog"
+        aria-labelledby="audioDisclaimerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -28,12 +59,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>To enhance your experience, our website utilizes sound. On certain browsers, you may need to manually enable sound playback. Here's how:</p>
+                    <p>To enhance your experience, our website utilizes sound. On certain browsers, you may need to
+                        manually enable sound playback. Here's how:</p>
                     <ul>
-                        <li><strong>For PC Users:</strong> Click on the website's lock/icon in the address bar. Go to Site settings > Sound, and select "Allow".</li>
-                        <li><strong>For Mobile Users:</strong> Due to mobile browser policies, sound may need to be initiated by a user action. Please interact with the site (e.g., click "Enable Sound") to activate audio features.</li>
+                        <li><strong>For PC Users:</strong> Click on the website's lock/icon in the address bar. Go to
+                            Site settings > Sound, and select "Allow".</li>
+                        <li><strong>For Mobile Users:</strong> Due to mobile browser policies, sound may need to be
+                            initiated by a user action. Please interact with the site (e.g., click "Enable Sound") to
+                            activate audio features.</li>
                     </ul>
-                    <p>Please note that settings might vary based on the browser and version. Consult your browser's help section for precise instructions.</p>
+                    <p>Please note that settings might vary based on the browser and version. Consult your browser's
+                        help section for precise instructions.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -46,19 +82,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
-    <script>
-    $(document).ready(function() {
-        // Check if the modal was previously closed
-        if (!localStorage.getItem('audioDisclaimerSeen')) {
-            // Show the modal if it hasn't been shown before
-            $('#audioDisclaimerModal').modal('show');
-        }
-
-        // When the modal is closed, set a flag in localStorage
-        $('#audioDisclaimerModal').on('hidden.bs.modal', function () {
-            localStorage.setItem('audioDisclaimerSeen', 'true');
-        });
-    });
-</script>
 </body>
+
 </html>

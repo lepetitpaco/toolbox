@@ -1,27 +1,33 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+    background-image: url('https://cdn.hero.page/wallpapers/9e77c70d-080d-4940-95ee-eb18ec9e7fcc-simple-mountainous-scenery-wallpaper-3.png'); /* Add your desired background image URL here */
+    background-color: #8b8b8b; /* Fallback color */
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the background image */
+    color: #f8f9fa; /* Light color for better contrast and readability */
     margin: 0;
-    padding: 20px;
+    padding: 0; /* Adjusted to remove default padding */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    width: 100vw; /* Ensure body covers the full viewport width */
 }
 
 .container {
-    max-width: 90%; /* More responsive width */
-    background-color: white;
+    max-width: 90%; /* Responsive width */
+    background-color: rgba(55, 49, 77, 0.8); /* Adjusted for slight transparency */
     padding: 20px;
     border-radius: 0.25rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow for depth */
     text-align: center;
+    color: #ffffff; /* Ensure text inside the container is white for readability */
 }
 
-.soundboard h2 {
-    color: #007bff;
+h1 {
+    color: #007bff50;
     margin-bottom: 20px;
+    text-transform: uppercase;
 }
 
 #sound-buttons {
@@ -31,7 +37,7 @@ body {
 /* Adjustments to .sound-btn for better default visibility */
 .sound-btn {
     padding: 10px 15px!important;
-    background-color: #007bff!important;
+    background-color: #007bff50!important;
     color: white!important;
     border-radius: 0.25rem!important;
     cursor: pointer!important;
@@ -66,4 +72,31 @@ body {
     .audio-disclaimer {
         font-size: 14px;
     }
+}
+
+.sound-controls {
+    background-color: transparent; /* Light grey background, adjust as needed */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+#stopAllSounds {
+    font-weight: bold; /* Make text bold for better readability */
+}
+
+#volumeSlider {
+    cursor: pointer; /* Ensure cursor changes to pointer to indicate interactiveness */
+}
+
+#activeUsers {
+    position: fixed; /* Fixed positioning to keep it at the same spot */
+    top: 20px; /* 20px from the top */
+    right: 20px; /* 20px from the right */
+    font-size: 8em; /* Large font size */
+    color: #ffffff; /* White text color */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    padding: 10px; /* Padding around the text */
+    border-radius: 10px; /* Rounded corners */
+    z-index: 1000; /* Ensure it sits above other content */
 }

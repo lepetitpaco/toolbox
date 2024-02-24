@@ -20,6 +20,9 @@ class Soundboard implements MessageComponentInterface
         // Add the new connection to the clients storage
         $this->clients->attach($conn);
 
+        // Broadcast the current number of active users
+        $this->broadcastActiveUsers();
+
         // Prepare the list of sound files
         $soundFiles = scandir(dirname(__FILE__) . '/../../soundboard/sounds/');
         $soundFiles = array_values(array_diff($soundFiles, ['.', '..'])); // Remove . and .. entries
@@ -52,6 +55,9 @@ class Soundboard implements MessageComponentInterface
         $connectionId = $conn->resourceId;
 
         $this->clients->detach($conn);
+
+        $this->broadcastActiveUsers();
+        
         error_log("Connection removed: " . $connectionId);
 
         // Remove the connection from the database
@@ -76,14 +82,14 @@ class Soundboard implements MessageComponentInterface
         error_log("Received message: " . $msg); // Log the received message
         $data = json_decode($msg, true);
         error_log("Decoded action: " . $data['action']); // Log the decoded action
-    
+
         // Ensure $data['action'] is checked to determine the correct course of action
         if (isset($data['action']) && $data['action'] === 'sound_play' && isset($data['sound_file'])) {
             // Call the method to play the sound with the correct sound file name
             $this->playSound($data['sound_file']);
         }
     }
-    
+
     private function playSound($soundFile)
     {
         // Loop through all connected clients and send the sound play action
@@ -97,6 +103,15 @@ class Soundboard implements MessageComponentInterface
             $client->send(json_encode($message));
         }
     }
-    
+
+    // New method to broadcast the number of active users
+    private function broadcastActiveUsers()
+    {
+        $activeUsers = count($this->clients);
+        foreach ($this->clients as $client) {
+            $client->send(json_encode(['type' => 'activeUsers', 'count' => $activeUsers]));
+        }
+    }
+
 
 }
