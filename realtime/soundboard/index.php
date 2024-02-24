@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="soundboard.ico" type="image/x-icon" rel="shortcut icon" />
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon" />
     <link rel="manifest" href="manifest.json">
     <title>Soundboard</title>
     <link rel="stylesheet" href="style.css">

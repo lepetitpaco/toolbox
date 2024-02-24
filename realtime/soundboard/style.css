@@ -1,13 +1,13 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url('https://cdn.hero.page/wallpapers/9e77c70d-080d-4940-95ee-eb18ec9e7fcc-simple-mountainous-scenery-wallpaper-3.png'); /* Add your desired background image URL here */
-    background-color: #8b8b8b; /* Fallback color */
-    background-size: cover; /* Cover the entire page */
-    background-position: center; /* Center the background image */
-    background-attachment: fixed; /* Make the background fixed */
-    color: #f8f9fa; /* Light color for better contrast and readability */
+    background-image: url('https://cdn.hero.page/wallpapers/9e77c70d-080d-4940-95ee-eb18ec9e7fcc-simple-mountainous-scenery-wallpaper-3.png');
+    background-color: #8b8b8b;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f8f9fa;
     margin: 0;
-    padding: 0; /* Adjusted to remove default padding */
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,13 +15,13 @@ body {
 }
 
 .container {
-    max-width: 90%; /* Responsive width */
-    background-color: rgba(55, 49, 77, 0.8); /* Adjusted for slight transparency */
+    max-width: 90%;
+    background-color: rgba(55, 49, 77, 0.8);
     padding: 20px;
     border-radius: 0.25rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow for depth */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-    color: #ffffff; /* Ensure text inside the container is white for readability */
+    color: #ffffff;
 }
 
 h1 {
@@ -31,25 +31,28 @@ h1 {
 }
 
 #sound-buttons {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
 /* Adjustments to .sound-btn for better default visibility */
 .sound-btn {
-    padding: 10px 15px!important;
-    background-color: #007bff50!important;
-    color: white!important;
-    border-radius: 0.25rem!important;
-    cursor: pointer!important;
-    transition: transform 0.2s ease, background-color 0.2s ease!important;
-    flex-grow: 1!important;
-    margin: 5px!important;
-    border: none!important;
+    padding: 10px 15px !important;
+    background-color: #007bff50 !important;
+    color: white !important;
+    border-radius: 0.25rem !important;
+    cursor: pointer !important;
+    transition: transform 0.2s ease, background-color 0.2s ease !important;
+    flex-grow: 1 !important;
+    margin: 5px !important;
+    border: none !important;
 }
 
-.sound-btn:hover, .sound-btn:focus {
+.sound-btn:hover,
+.sound-btn:focus {
     transform: translateY(-2px);
-    background-color: #00b351!important;
+    background-color: #00b351 !important;
 }
 
 .audio-disclaimer {
@@ -75,97 +78,131 @@ h1 {
 }
 
 .sound-controls {
-    background-color: transparent; /* Light grey background, adjust as needed */
+    background-color: transparent;
+    /* Light grey background, adjust as needed */
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
 }
 
 #stopAllSounds {
-    font-weight: bold; /* Make text bold for better readability */
+    font-weight: bold;
+    /* Make text bold for better readability */
 }
 
 #volumeSlider {
-    cursor: pointer; /* Ensure cursor changes to pointer to indicate interactiveness */
+    cursor: pointer;
+    /* Ensure cursor changes to pointer to indicate interactiveness */
 }
 
 #activeUsers {
-    position: fixed; /* Fixed positioning to keep it at the same spot */
-    top: 20px; /* 20px from the top */
-    right: 20px; /* 20px from the right */
-    font-size: 8em; /* Large font size */
-    color: #ffffff; /* White text color */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    padding: 10px; /* Padding around the text */
-    border-radius: 10px; /* Rounded corners */
-    z-index: 1000; /* Ensure it sits above other content */
+    position: fixed;
+    /* Fixed positioning to keep it at the same spot */
+    top: 20px;
+    /* 20px from the top */
+    right: 20px;
+    /* 20px from the right */
+    font-size: 8em;
+    /* Large font size */
+    color: #ffffff;
+    /* White text color */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black background */
+    padding: 10px;
+    /* Padding around the text */
+    border-radius: 10px;
+    /* Rounded corners */
+    z-index: 1000;
+    /* Ensure it sits above other content */
     pointer-events: none;
 }
 
-/* Updated Folder Styles */
-.folder {
+.folder-group {
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.folder,
+.subfolder {
     padding: 10px 15px;
-    background-color: #007bff50!important; /* Vibrant blue for folders */
-    color: white!important;
-    border-radius: 0.25rem!important;
-    cursor: pointer!important;
-    margin: 5px auto; /* Center folders */
-    border: none!important;
+    background-color: #007bff50;
+    color: white;
+    border-radius: 0;
+    cursor: pointer;
+    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: calc(100% - 10px); /* Adjust width to fit container */
+    width: 100%;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.folder:hover {
-    background-color: #0056b3!important; /* Darker blue on hover */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow for depth */
+.folder:hover,
+.subfolder:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.folder::after {
-    content: '▼'; /* Change to a down arrow icon */
+.folder::after,
+.subfolder::after {
+    content: '▼';
     font-weight: bold;
-    transition: transform 0.3s ease; /* Smooth rotation transition */
+    transition: transform 0.3s ease;
 }
 
-.folder.open::after {
-    content: '▲'; /* Change to an up arrow icon when open */
+.folder.open::after,
+.subfolder.open::after {
     transform: rotate(180deg);
+    content: '▲';
+}
+
+.subfolder {
+    background-color: #0062cc;
+    /* Slightly darker background for subfolders */
 }
 
 .file-list {
     display: none;
-    padding-left: 20px;
-    padding-top: 10px;
+    padding: 15px 15px;
 }
 
-
 #toastContainer .toast {
-    font-size: 1rem; /* Adjust the font size as needed */
-    background-color: rgba(51, 51, 51, 0.85); /* Semi-transparent black background */
-    color: #ffffff; /* White text color */
-    border-radius: 0.25rem; /* Rounded corners */
+    font-size: 1rem;
+    /* Adjust the font size as needed */
+    background-color: rgba(51, 51, 51, 0.85);
+    /* Semi-transparent black background */
+    color: #ffffff;
+    /* White text color */
+    border-radius: 0.25rem;
+    /* Rounded corners */
 }
 
 #toastContainer .toast .toast-body {
-    white-space: nowrap; /* Prevent text from wrapping */
+    white-space: nowrap;
+    /* Prevent text from wrapping */
 }
 
 #toastContainer .toast.showing,
 #toastContainer .toast.show,
 #toastContainer .toast.hide {
-    opacity: 1; /* Make toast fully visible when animating in/out */
+    opacity: 1;
+    /* Make toast fully visible when animating in/out */
 }
 
 .toast-header {
-    background-color: rgba(34, 34, 34, 0.85); /* Darker background for the header */
-    color: #ffffff; /* White text color for the header */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border for the header */
+    background-color: rgba(34, 34, 34, 0.85);
+    /* Darker background for the header */
+    color: #ffffff;
+    /* White text color for the header */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Light border for the header */
 }
 
-#toastContainer .soundboard-title {
-    margin-right: 20px; /* Adjust the value as needed */
+.soundboard-title {
+    margin-right: 20px;
+    /* Adjust the value as needed */
 }
-

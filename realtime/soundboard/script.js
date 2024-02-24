@@ -25,31 +25,90 @@ $(document).ready(function () {
         }
     };
 
-    // Function to parse URL parameters
-    function getUrlParams() {
-        const params = {};
-        const queryString = window.location.search.substring(1);
-        queryString.split('&').forEach((param) => {
-            let [key, value] = param.split('=');
-            params[key] = value;
+
+    function buildSoundboard(soundFiles) {
+        const soundboard = $('#sound-buttons');
+        soundboard.empty(); // Clear existing contents
+
+        const directoryTree = {};
+        soundFiles.forEach(filePath => {
+            const parts = filePath.split('/');
+            let currentLevel = directoryTree;
+
+            for (let i = 0; i < parts.length; i++) {
+                const part = parts[i];
+                const isFile = i === parts.length - 1;
+
+                if (isFile) {
+                    if (!currentLevel.files) currentLevel.files = [];
+                    currentLevel.files.push(filePath);
+                } else {
+                    if (!currentLevel[part]) currentLevel[part] = {};
+                    currentLevel = currentLevel[part];
+                }
+            }
         });
-        return params;
-    }
 
-    // Parse the current URL parameters
-    const urlParams = getUrlParams();
-
-    // Function to format folder names for display
-    function formatFolderName(folder) {
-        // If the folder name contains 'hidden', and URL parameters do not allow showing hidden folders, return null
+        // Check URL parameters for 'naughty'
         const urlParams = new URLSearchParams(window.location.search);
         const showHiddenFolders = urlParams.has('naughty');
+
+        function buildDirectoryUI(directory, container, path = '', level = 0) {
+            const sortedKeys = Object.keys(directory).sort((a, b) => {
+                if (a === 'files') return 1;
+                if (b === 'files') return -1;
+                return a.localeCompare(b);
+            });
+        
+            const showHiddenFolders = new URLSearchParams(window.location.search).has('naughty');
+        
+            sortedKeys.forEach(key => {
+                if (key === 'files') {
+                    directory.files.forEach(filePath => {
+                        const fileName = filePath.split('/').pop();
+                        const formattedButtonName = formatButtonName(fileName);
+                        const soundButton = $(`<button class="btn sound-btn">${formattedButtonName}</button>`)
+                            .click(() => playSound(filePath));
+                        container.append(soundButton);
+                    });
+                } else {
+                    if (key.toLowerCase().includes('hidden') && !showHiddenFolders) return;
+        
+                    const isSubfolder = level > 0;
+                    const folderClass = isSubfolder ? 'folder subfolder' : 'folder';
+                    const formattedFolderName = formatFolderName(key, showHiddenFolders);
+                    
+                    // Wrap the folder and file list together in a div
+                    const folderGroup = $('<div class="folder-group"></div>');
+                    const folderElem = $(`<div class="${folderClass}">${formattedFolderName}</div>`);
+                    const fileList = $('<div class="file-list" style="display: none;"></div>');
+        
+                    buildDirectoryUI(directory[key], fileList, path + key + '/', level + 1);
+                    folderElem.click(() => {
+                        folderElem.toggleClass('open');
+                        fileList.toggle();
+                    });
+        
+                    folderGroup.append(folderElem).append(fileList);
+                    container.append(folderGroup);
+                }
+            });
+        }
+        
+        
+
+        buildDirectoryUI(directoryTree, soundboard);
+    }
+
+    function formatFolderName(folder, showHiddenFolders) {
+        let formattedFolderName = folder;
+
+        // If not showing hidden folders, return null if folder is hidden
         if (folder.toLowerCase().includes('hidden') && !showHiddenFolders) {
             return null;
         }
 
-        // Remove 'hidden' from the folder name if it's allowed to be shown
-        let formattedFolderName = folder;
+        // Remove the word 'hidden' from the folder name if showing hidden folders
         if (showHiddenFolders) {
             formattedFolderName = formattedFolderName.replace(/hidden/gi, '').trim();
         }
@@ -63,61 +122,13 @@ $(document).ready(function () {
         return formattedFolderName;
     }
 
-
-    // Function to format button names for display
     function formatButtonName(fileName) {
-        // Remove file extension and replace underscores, hyphens with spaces
-        return fileName.replace(/\.[^/.]+$/, '') // Remove extension
-            .replace(/[_-]/g, ' ') // Replace underscores, hyphens with spaces
-            .replace(/\+/g, "'") // Replace '+' with an apostrophe
+        return fileName.replace(/\.[^/.]+$/, '')
+            .replace(/[_-]/g, ' ')
+            .replace(/\+/g, "'")
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(' ');
-    }
-
-    function buildSoundboard(soundFiles) {
-        const soundboard = $('#sound-buttons');
-        soundboard.empty(); // Clear existing contents
-
-        const folders = {};
-
-        // Organize sound files by their folder paths
-        soundFiles.forEach(filePath => {
-            const parts = filePath.split('/');
-            const fileName = parts.pop();
-            const folderPath = parts.join('/') || 'Root';
-
-            if (!folders[folderPath]) {
-                folders[folderPath] = [];
-            }
-            folders[folderPath].push(filePath);
-        });
-
-        // Create UI elements for folders and files
-        Object.keys(folders).forEach(folder => {
-            const formattedFolderName = formatFolderName(folder);
-            // Skip folders that are meant to be hidden and are not allowed by URL params
-            if (formattedFolderName === null) return;
-
-            const folderElem = $(`<div class="folder">${formattedFolderName || 'Root'}</div>`);
-            const fileList = $('<div class="file-list"></div>');
-
-            folders[folder].forEach(filePath => {
-                const fileName = filePath.split('/').pop(); // Extract file name from path
-                const formattedButtonName = formatButtonName(fileName);
-                const soundButton = $(`<button class="btn sound-btn">${formattedButtonName}</button>`).click(function () {
-                    playSound(filePath);
-                });
-                fileList.append(soundButton);
-            });
-
-            folderElem.click(function () {
-                $(this).toggleClass('open'); // Toggle 'open' class to change the icon
-                fileList.toggle(); // Toggle visibility on click
-            });
-
-            soundboard.append(folderElem).append(fileList);
-        });
     }
 
     // Handle errors
@@ -166,7 +177,7 @@ $(document).ready(function () {
         autohide: true,
         delay: 5000 // Adjust the delay as needed
     });
-    
+
 
     function updateVolume(newVolume) {
         globalVolume = newVolume;
@@ -194,7 +205,7 @@ $(document).ready(function () {
                 $('#soundToast .toast-body').text(`Playing: ${soundName}`);
                 $('#soundToast').toast('show');
             }).catch(error => console.error("Error playing sound:", error));
-    
+
             // Cleanup when audio finishes playing
             audio.onended = function () {
                 activeAudios = activeAudios.filter(a => a !== audio);
@@ -212,13 +223,13 @@ $(document).ready(function () {
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./service-worker.js').then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
+            navigator.serviceWorker.register('./service-worker.js').then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
         });
-      }
-      
-    
+    }
+
+
 });
