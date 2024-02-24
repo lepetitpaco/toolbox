@@ -31,7 +31,9 @@ $(document).ready(function () {
             // Initialize the sound buttons with the received list of sound files
             var soundFiles = message.sounds;
             soundFiles.forEach(function (fileName) {
-                var soundButton = $('<button class="btn btn-primary sound-btn m-2">' + fileName + '</button>');
+                // Remove the .mp3 extension from the fileName for the button text
+                var buttonText = fileName.replace('.mp3', '').replace(/-/g, ' ').toUpperCase();
+                var soundButton = $('<button class="btn sound-btn">' + buttonText + '</button>');
                 soundButton.click(function () {
                     playSound(fileName);
                 });
@@ -39,7 +41,7 @@ $(document).ready(function () {
             });
         } else if (message.action === 'sound_play') {
             // Directly play the sound received from the server without sending it back
-            playSound({name: message.sound_file, directPlay: true});
+            playSound({ name: message.sound_file, directPlay: true });
         }
     };
 
