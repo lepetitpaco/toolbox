@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<div id="activeUsers">0</div>
+    <div id="activeUsers">0</div>
 
     <div class="container mt-5">
         <div class="row mb-3">
@@ -77,6 +77,26 @@
             </div>
         </div>
     </div>
+
+    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+        <div id="toastContainer" style="position: fixed; bottom: 0; right: 0; margin: 20px;">
+
+            <!-- Toast -->
+            <div id="soundToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                <div class="toast-header">
+                    <strong class="mr-auto soundboard-title">Soundboard</strong>
+                    <small>Just now</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Sound played successfully!
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

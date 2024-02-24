@@ -100,3 +100,71 @@ h1 {
     border-radius: 10px; /* Rounded corners */
     z-index: 1000; /* Ensure it sits above other content */
 }
+
+/* Updated Folder Styles */
+.folder {
+    padding: 10px 15px;
+    background-color: #007bff50!important; /* Vibrant blue for folders */
+    color: white!important;
+    border-radius: 0.25rem!important;
+    cursor: pointer!important;
+    margin: 5px auto; /* Center folders */
+    border: none!important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 10px); /* Adjust width to fit container */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.folder:hover {
+    background-color: #0056b3!important; /* Darker blue on hover */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow for depth */
+}
+
+.folder::after {
+    content: '▼'; /* Change to a down arrow icon */
+    font-weight: bold;
+    transition: transform 0.3s ease; /* Smooth rotation transition */
+}
+
+.folder.open::after {
+    content: '▲'; /* Change to an up arrow icon when open */
+    transform: rotate(180deg);
+}
+
+.file-list {
+    display: none;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+
+#toastContainer .toast {
+    font-size: 1rem; /* Adjust the font size as needed */
+    background-color: rgba(51, 51, 51, 0.85); /* Semi-transparent black background */
+    color: #ffffff; /* White text color */
+    border-radius: 0.25rem; /* Rounded corners */
+}
+
+#toastContainer .toast .toast-body {
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+#toastContainer .toast.showing,
+#toastContainer .toast.show,
+#toastContainer .toast.hide {
+    opacity: 1; /* Make toast fully visible when animating in/out */
+}
+
+.toast-header {
+    background-color: rgba(34, 34, 34, 0.85); /* Darker background for the header */
+    color: #ffffff; /* White text color for the header */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border for the header */
+}
+
+.soundboard-title {
+    margin-right: 20px; /* Adjust the value as needed */
+}
+

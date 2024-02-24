@@ -32,9 +32,8 @@ class Soundboard implements MessageComponentInterface
         // Broadcast the current number of active users
         $this->broadcastActiveUsers();
 
-        // Prepare the list of sound files
-        $soundFiles = scandir(dirname(__FILE__) . '/../../soundboard/sounds/');
-        $soundFiles = array_values(array_diff($soundFiles, ['.', '..'])); // Remove . and .. entries
+        $soundDir = dirname(__FILE__) . '/../../soundboard/sounds/';
+        $soundFiles = $this->getSoundFiles($soundDir);
 
         // Send the list of sound files to the client
         $message = [
@@ -45,6 +44,33 @@ class Soundboard implements MessageComponentInterface
 
         $connectionId = $conn->resourceId;
         error_log("[Soundboard] New connection opened: " . $connectionId); // Log the opening of a new connection
+    }
+
+    // Recursively scan for sound files
+    private function getSoundFiles($dir, $baseDir = null, &$results = [])
+    {
+        // Initialize the base directory on the first call
+        if ($baseDir === null) {
+            $baseDir = realpath($dir);
+        }
+
+        $files = scandir($dir);
+
+        foreach ($files as $key => $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!$path)
+                continue; // Skip if path couldn't be resolved
+            if (!is_dir($path)) {
+                // Subtract the base directory part from the path to get a relative path
+                $relativePath = substr($path, strlen($baseDir) + 1); // +1 to remove leading slash
+                $relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath); // Convert to web path
+                $results[] = $relativePath;
+            } else if ($value != "." && $value != "..") {
+                $this->getSoundFiles($path, $baseDir, $results); // Recursive call
+            }
+        }
+
+        return $results;
     }
 
     public function onClose(ConnectionInterface $conn)
