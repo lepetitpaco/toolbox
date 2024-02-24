@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<div id="activeUsers">0</div>
 
     <div class="container">
         <div class="word-counter">

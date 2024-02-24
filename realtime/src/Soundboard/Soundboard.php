@@ -93,8 +93,6 @@ class Soundboard implements MessageComponentInterface
             $client->send(json_encode($message));
         }
     }
-
-    // New method to broadcast the number of active users
     private function broadcastActiveUsers()
     {
         $activeUsers = count($this->soundboardClients);

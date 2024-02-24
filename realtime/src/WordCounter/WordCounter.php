@@ -30,6 +30,9 @@ class WordCounter implements MessageComponentInterface
             $this->wordcounterClients->attach($conn); // It's a wordcounter connection
         }
 
+        // Broadcast the current number of active users
+        $this->broadcastActiveUsers();
+
 
         $connectionId = $conn->resourceId;
         error_log("[Word Counter] New connection opened: " . $connectionId); // Log the opening of a new connection
@@ -41,6 +44,9 @@ class WordCounter implements MessageComponentInterface
 
         $this->wordcounterClients->detach($conn);
         error_log("[Word Counter] Connection removed: " . $connectionId);
+
+        // Broadcast the current number of active users
+        $this->broadcastActiveUsers();
 
         // Close the connection
         $conn->close();
@@ -183,5 +189,12 @@ class WordCounter implements MessageComponentInterface
         }
         // error_log('Fetched data from database: ' . print_r($data, true));
         return $data;
+    }
+    private function broadcastActiveUsers()
+    {
+        $activeUsers = count($this->wordcounterClients);
+        foreach ($this->wordcounterClients as $client) {
+            $client->send(json_encode(['type' => 'activeUsers', 'count' => $activeUsers]));
+        }
     }
 }

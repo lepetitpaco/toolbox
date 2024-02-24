@@ -43,6 +43,13 @@ $(document).ready(function () {
         conn.onmessage = function (e) {
             try {
                 var message = JSON.parse(e.data);
+
+                // Check for 'activeUsers' type message and update the UI
+                if (message.type === 'activeUsers') {
+                    document.getElementById('activeUsers').textContent = `${message.count}`;
+                }
+
+
                 // console.log("Received message:", message);
                 // Handle initial data load and updates differently if needed
                 if (message.type === 'initialData') {
