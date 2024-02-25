@@ -12,9 +12,9 @@ class CombinedHandler implements MessageComponentInterface
     protected $wordCounter;
     protected $soundboard;
 
-    public function __construct($dbConnection)
+    public function __construct($dbConnection, $dbHost, $dbUser, $dbPass, $dbName)
     {
-        $this->wordCounter = new WordCounter($dbConnection);
+        $this->wordCounter = new WordCounter($dbConnection, $dbHost, $dbUser, $dbPass, $dbName);
         $this->soundboard = new Soundboard($dbConnection);
     }
 

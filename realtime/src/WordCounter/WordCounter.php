@@ -10,11 +10,22 @@ class WordCounter implements MessageComponentInterface
     protected $clients;
     protected $wordcounterClients;
     protected $dbConnection; // Property to hold the database connection
+    private $dbHost;
+    private $dbUser;
+    private $dbPass;
+    private $dbName;
 
-    public function __construct($dbConnection)
+    public function __construct($dbConnection, $dbHost, $dbUser, $dbPass, $dbName)
     {
         $this->wordcounterClients = new \SplObjectStorage;
         $this->dbConnection = $dbConnection; // Store the database connection
+        // Store the database connection details
+        $this->dbHost = $dbHost;
+        $this->dbUser = $dbUser;
+        $this->dbPass = $dbPass;
+        $this->dbName = $dbName;
+
+        \mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -90,63 +101,100 @@ class WordCounter implements MessageComponentInterface
         $word = $data['word'] ?? '';
         $newWord = $data['newWord'] ?? ''; // Only used in the 'rename' action
 
-        // error_log("displaying datas before switch : " . print_r($data, true));
+        $operation = function () use ($action, $word, $newWord) {
+            switch ($action) {
+                case 'word_add':
+                    $stmt = $this->dbConnection->prepare("INSERT INTO word_count (word, count) VALUES (?, 1) ON DUPLICATE KEY UPDATE count = count + 1");
+                    $stmt->bind_param("s", $word);
+                    break;
+                case 'word_remove':
+                    $stmt = $this->dbConnection->prepare("DELETE FROM word_count WHERE word = ?");
+                    $stmt->bind_param("s", $word);
+                    break;
+                case 'word_increment':
+                    $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count + 1 WHERE word = ?");
+                    $stmt->bind_param("s", $word);
+                    break;
+                case 'word_decrement':
+                    $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count - 1 WHERE word = ?");
+                    $stmt->bind_param("s", $word);
+                    break;
+                case 'word_rename':
+                    $stmt = $this->dbConnection->prepare("UPDATE word_count SET word = ? WHERE word = ?");
+                    $stmt->bind_param("ss", $newWord, $word);
+                    break;
+                default:
+                    $this->broadcast(['error' => 'Invalid action']);
+                    return; // Exit the method early if the action is invalid
+            }
 
-        switch ($action) {
-            case 'word_add':
-                $stmt = $this->dbConnection->prepare("INSERT INTO word_count (word, count) VALUES (?, 1) ON DUPLICATE KEY UPDATE count = count + 1");
-                $stmt->bind_param("s", $word);
-                break;
+            // Check if the statement was prepared successfully
+            if ($stmt === false) {
+                throw new \mysqli_sql_exception("Prepare failed: " . $this->dbConnection->error);
+            }
 
-            case 'word_remove':
-                $stmt = $this->dbConnection->prepare("DELETE FROM word_count WHERE word = ?");
-                $stmt->bind_param("s", $word);
-                break;
+            // Execute the prepared statement and check for success
+            if (!$stmt->execute()) {
+                throw new \mysqli_sql_exception("Execute failed: " . $stmt->error);
+            }
 
-            case 'word_increment':
-                $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count + 1 WHERE word = ?");
-                $stmt->bind_param("s", $word);
-                break;
+            $stmt->close();
+        };
 
-            case 'word_decrement':
-                $stmt = $this->dbConnection->prepare("UPDATE word_count SET count = count - 1 WHERE word = ?");
-                $stmt->bind_param("s", $word);
-                break;
+        $this->attemptDatabaseOperation($operation);
+    }
 
-            case 'word_rename':
-                $stmt = $this->dbConnection->prepare("UPDATE word_count SET word = ? WHERE word = ?");
-                $stmt->bind_param("ss", $newWord, $word); // Note the double "s" for two string parameters
-                break;
-
-            default:
-                $this->broadcast(['error' => 'Invalid action']);
-                return; // Exit the method early if the action is invalid
+    private function attemptDatabaseOperation($operation)
+    {
+        try {
+            error_log("[attemptDatabaseOperation] Attempting database operation...");
+            $operation();
+        } catch (\mysqli_sql_exception $e) {
+            error_log("[attemptDatabaseOperation] Caught database exception: " . $e->getMessage());
+            if ($this->dbConnection->errno === 2006 || $this->dbConnection->errno === 2013) {
+                error_log("[attemptDatabaseOperation] Attempting to reconnect to the database...");
+                if ($this->reconnectToDatabase()) {
+                    error_log("[attemptDatabaseOperation] Reconnected to the database, retrying operation...");
+                    $operation(); // Retry operation after reconnection
+                } else {
+                    error_log("[attemptDatabaseOperation] Failed to reconnect to the database.");
+                }
+            } else {
+                throw $e; // Re-throw if it's not a connection error
+            }
         }
+    }
 
-        // Check if the statement was prepared successfully
-        if ($stmt === false) {
-            error_log("Prepare failed: " . $this->dbConnection->error);
-            return;
+    private function reconnectToDatabase()
+    {
+        $this->dbConnection = new \mysqli($this->dbHost, $this->dbUser, $this->dbPass, $this->dbName);
+        if ($this->dbConnection->connect_error) {
+            error_log("[reconnectToDatabase] Database reconnection failed: " . $this->dbConnection->connect_error);
+            return false;
         }
-
-        // Execute the prepared statement and check for success
-        if (!$stmt->execute()) {
-            error_log("Execute failed: " . $stmt->error);
-        } else {
-            error_log("Executed with success !!");
-
-        }
-
-        // Close the statement
-        $stmt->close();
+        error_log("[reconnectToDatabase] Successfully reconnected to the database.");
+        return true;
     }
 
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        $conn->close();
+        // Log the error
         error_log('Error on connection: ' . $e->getMessage());
+
+        // Attempt to send an error message to the client
+        try {
+            $errorMessage = json_encode(['error' => 'An internal server error occurred.']);
+            $conn->send($errorMessage);
+        } catch (\Exception $sendException) {
+            // Log if there's an issue sending the message, but this is not critical as we're about to close the connection
+            error_log('Error sending error message: ' . $sendException->getMessage());
+        }
+
+        // Close the connection
+        $conn->close();
     }
+
 
     public function broadcast($data)
     {
@@ -178,18 +226,56 @@ class WordCounter implements MessageComponentInterface
             ]);
         }
     }
-
     private function fetchUpdatedDataFromDatabase()
     {
         $query = "SELECT word, count FROM word_count ORDER BY word ASC";
-        $result = $this->dbConnection->query($query);
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+
+        try {
+            // Log the start of the database query
+            error_log("[fetchUpdatedDataFromDatabase] Executing query: $query");
+
+            // Execute the query
+            $result = $this->dbConnection->query($query);
+
+            // Check if the query was successful
+            if ($result === false) {
+                throw new \mysqli_sql_exception("Query failed: " . $this->dbConnection->error);
+            }
+
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            // Close the result set
+            $result->close();
+
+            // Log successful data retrieval
+            error_log("[fetchUpdatedDataFromDatabase] Data fetched successfully");
+
+            return $data;
+        } catch (\mysqli_sql_exception $e) {
+            // Log the error
+            error_log('[fetchUpdatedDataFromDatabase] Error fetching data from database: ' . $e->getMessage());
+
+            // Attempt to reconnect to the database
+            if ($this->reconnectToDatabase()) {
+                // Log reconnection success
+                error_log("[fetchUpdatedDataFromDatabase] Reconnected to the database, retrying data fetch...");
+
+                // If reconnection succeeds, retry fetching data
+                return $this->fetchUpdatedDataFromDatabase();
+            } else {
+                // Log reconnection failure
+                error_log("[fetchUpdatedDataFromDatabase] Failed to reconnect to the database.");
+
+                // If reconnection fails, handle the error appropriately
+                // For example, return an empty array or throw an exception
+                return [];
+            }
         }
-        // error_log('Fetched data from database: ' . print_r($data, true));
-        return $data;
     }
+
+
     private function broadcastActiveUsers()
     {
         $activeUsers = count($this->wordcounterClients);

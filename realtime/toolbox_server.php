@@ -20,7 +20,7 @@ if (!$dbConnection) {
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(
-            new CombinedHandler($dbConnection)
+            new CombinedHandler($dbConnection, $_ENV['DBHOST'], $_ENV['DBUSER'], $_ENV['DBPASS'], $_ENV['DBNAME'])
         )
     ),
     8090
