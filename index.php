@@ -6,7 +6,7 @@ session_start();
 $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . '/';
 
 // Define directories to exclude from listing
-$excluded_dirs = ['.', '..', 'vendor'];
+$excluded_dirs = ['.', '..', 'vendor','assets'];
 
 // Get the root directory of the website
 $root_dir = $_SERVER['DOCUMENT_ROOT'];
@@ -28,7 +28,7 @@ $dirs = array_filter(glob($root_dir . '/*'), 'is_dir');
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url('https://cdn.hero.page/wallpapers/9e77c70d-080d-4940-95ee-eb18ec9e7fcc-simple-mountainous-scenery-wallpaper-3.png');
+            background-image: url('https://lepetitpaco.com/assets/img/wallpaper.png');
             background-color: #8b8b8b;
             /* Fallback color */
             background-size: cover;

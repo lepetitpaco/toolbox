@@ -28,9 +28,9 @@
             <div class="col-12">
                 <div class="sound-controls d-flex align-items-center justify-content-between">
                     <button id="stopAllSounds" class="btn btn-warning">Stop All Sounds</button>
-                    <div>
+                    <div class="volume-control-wrapper">
                         <label for="volumeSlider" class="form-label me-2">Volume:</label>
-                        <input type="range" id="volumeSlider" class="form-range" min="0" max="1" step="0.01"
+                        <input type="range" id="volumeSlider" class="custom-volume-slider" min="0" max="1" step="0.05"
                             value="0.2">
                     </div>
                 </div>
