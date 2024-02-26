@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/../config/config.php';
+require __DIR__ . '/../config/lepetitpaco.com.config.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(getEnvFilePath());
 $dotenv->load();
@@ -13,8 +13,6 @@ $dotenv->load();
 $credentials = array(
   $_ENV['USERNAME1'] => $_ENV['PASSWORD1'],
   $_ENV['USERNAME2'] => $_ENV['PASSWORD2'],
-  $_ENV['USERNAME3'] => $_ENV['PASSWORD3'],
-  $_ENV['USERNAME4'] => $_ENV['PASSWORD4'],
 );
 
 // Start the session
@@ -122,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input required type="password" id="password" name="password">
       </div>
       <button class="btn waves-effect waves-light" type="submit" value="Submit" name="action">
-        <i class="material-icons">send</i>
+        <i class="material-icons">LET'S GOOOOOO</i>
       </button>
     </form>
   </div>

@@ -6,7 +6,7 @@ use Ratchet\WebSocket\WsServer;
 use RealTime\App\CombinedHandler;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-require __DIR__ . '/../../config/config.php';
+require __DIR__ . '/../../config/lepetitpaco.com.config.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../config/');
 $dotenv->load();

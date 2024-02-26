@@ -13,7 +13,7 @@ The `project` file is located in the `lepetitpaco.com/tiny` directory. It includ
 The `project` file requires the following dependencies:
 
 - `vendor/autoload.php`: This file is responsible for autoloading the required classes and functions.
-- `config/config.php`: This file contains the configuration settings for the application.
+- `config/lepetitpaco.com.config.php`: This file contains the configuration settings for the application.
 
 ### Database Connection
 

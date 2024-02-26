@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 
 // Load environment variables
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../../config/config.php';
+require __DIR__ . '/../../config/lepetitpaco.com.config.php';
 $dotenv = Dotenv\Dotenv::createImmutable(getEnvFilePath());
 $dotenv->load();
 // db creds

@@ -6,7 +6,7 @@ session_start();
 $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . '/';
 
 // Define directories to exclude from listing
-$excluded_dirs = ['.', '..', 'vendor','assets'];
+$excluded_dirs = ['.', '..', 'vendor', 'assets'];
 
 // Get the root directory of the website
 $root_dir = $_SERVER['DOCUMENT_ROOT'];
@@ -158,8 +158,9 @@ $dirs = array_filter(glob($root_dir . '/*'), 'is_dir');
             <div class="col-12">
                 <h1>Toolbox</h1>
                 <p>You probably won't find what you need right now, but I offer you other stuff you won't
-                need. My collection of tools is vast and varied, and I am sure you'll find something that you don't
-                need. <br>My tools are designed to be a pain in the ass and complicated to use, even if you need them.</p>
+                    need. My collection of tools is vast and varied, and I am sure you'll find something that you don't
+                    need. <br>My tools are designed to be a pain in the ass and complicated to use, even if you need
+                    them.</p>
             </div>
         </div>
 
@@ -169,18 +170,22 @@ $dirs = array_filter(glob($root_dir . '/*'), 'is_dir');
                 if (in_array($dir_name, $excluded_dirs))
                     continue; // Skip excluded directories
                 $relativePath = str_replace($root_dir, '', $dir); // Get the relative path from the root directory
+            
+                // Replace underscores and hyphens with spaces and capitalize each word
+                $pretty_dir_name = ucwords(str_replace(['_', '-'], ' ', $dir_name));
                 ?>
                 <div class="col-md-6 col-sm-12 mb-3">
                     <a href="<?php echo $baseUrl . ltrim($relativePath, '/'); ?>" class="app-link">
                         <div class="app-entry">
                             <h2>
-                                <?php echo ucfirst($dir_name); ?>
+                                <?php echo $pretty_dir_name; ?>
                             </h2>
                         </div>
                     </a>
                 </div>
             <?php endforeach; ?>
         </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -1,3 +1,7 @@
+<?php
+include('../login_redirect.php');
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
