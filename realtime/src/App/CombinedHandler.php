@@ -4,17 +4,14 @@ namespace RealTime\App; // Use the appropriate namespace for your project
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use RealTime\WordCounter\WordCounter;
 use RealTime\Soundboard\Soundboard;
 
 class CombinedHandler implements MessageComponentInterface
 {
-    protected $wordCounter;
     protected $soundboard;
 
     public function __construct($dbConnection, $dbHost, $dbUser, $dbPass, $dbName)
     {
-        $this->wordCounter = new WordCounter($dbConnection, $dbHost, $dbUser, $dbPass, $dbName);
         $this->soundboard = new Soundboard($dbConnection);
     }
 
@@ -27,9 +24,6 @@ class CombinedHandler implements MessageComponentInterface
         // Check the 'service' query parameter to determine which handler to use
         if (isset($queryParams['service'])) {
             switch ($queryParams['service']) {
-                case 'wordcounter':
-                    $this->wordCounter->onOpen($conn);
-                    break;
                 case 'soundboard':
                     $this->soundboard->onOpen($conn);
                     break;
@@ -54,9 +48,6 @@ class CombinedHandler implements MessageComponentInterface
         // Check the 'service' query parameter to determine which handler to use
         if (isset($queryParams['service'])) {
             switch ($queryParams['service']) {
-                case 'wordcounter':
-                    $this->wordCounter->onClose($conn);
-                    break;
                 case 'soundboard':
                     $this->soundboard->onClose($conn);
                     break;
@@ -80,10 +71,7 @@ class CombinedHandler implements MessageComponentInterface
         error_log("[Combined Handler] \$action: " . $action);
 
         // Route based on action
-        if (strpos($action, 'word_') === 0) {
-            error_log("[Combined Handler] word_ prefix");
-            $this->wordCounter->onMessage($from, $msg);
-        } elseif (strpos($action, 'sound_') === 0) {
+        if (strpos($action, 'sound_') === 0) {
             error_log("[Combined Handler] sound_ prefix");
             $this->soundboard->onMessage($from, $msg);
         } else {
@@ -95,7 +83,6 @@ class CombinedHandler implements MessageComponentInterface
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         // Delegate to both handlers if needed
-        $this->wordCounter->onError($conn, $e);
         $this->soundboard->onError($conn, $e);
     }
 }

@@ -27,14 +27,6 @@
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-sm-12 mb-3">
-                <a href="/realtime/compteur" class="app-link">
-                    <div class="app-entry">
-                        <h2>Compteur de Mots</h2>
-                        <p>Pourquoiaaaaa??</p>
-                    </div>
-                </a>
-            </div>
         </div>
     </div>
 
