@@ -59,7 +59,7 @@ if (isset($_POST['url'])) {
 
         if ($result) {
             // URL stored successfully
-            $shortUrl = 'https://lepetitpaco.com/tiny/' . $shortCode;
+            $shortUrl = 'https://lepetitpaco.com/tiny-links/' . $shortCode;
         } else {
             // Error handling
             echo "Error creating short URL.";

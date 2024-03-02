@@ -1,0 +1,162 @@
+/**
+ * This CSS file contains styles for a Spotify API web application.
+ * It includes basic resets and body styling, top bar design, playlist items and songs list,
+ * loader styles, and table styles for songs.
+ */
+
+/* Basic Resets and Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+/* Top Bar Design */
+#topBar {
+    background-color: #1DB954; /* Spotify green for brand consistency */
+    padding: 10px 5%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: white; /* For contrast against the green background */
+}
+
+#userInput {
+    display: flex;
+    gap: 10px; /* Adds space between elements */
+}
+
+#spotifyUsername {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+}
+
+#userInput button,
+#resetToDefault {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#fetchUserPlaylists {
+    background-color: #0a0a0a; /* Darker shade for primary action */
+    color: #fff;
+}
+
+#resetToDefault {
+    background-color: #666; /* Grey for secondary action */
+    color: #fff;
+}
+
+#userInput button:hover {
+    transform: scale(1.05); /* Slight increase in size on hover */
+    background-color: #1ED760; /* Lighter Spotify green */
+}
+
+/* Playlist Items and Songs List */
+h1 {
+    margin-bottom: 20px;
+}
+
+#playlistItems {
+    list-style: none;
+}
+
+.playlist-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.playlist-item img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.playlist-songs {
+    display: none;
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.playlist-songs li {
+    padding: 5px 0;
+}
+
+/* Loader Styles */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Table Styles for Songs */
+.songs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.songs-table th,
+.songs-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.songs-table th {
+    background-color: #f4f4f4;
+}
+
+.songs-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.songs-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.songs-table a {
+    color: #1DB954; /* Spotify's brand green */
+    text-decoration: none; /* Removes underline from links */
+    transition: color 0.3s ease; /* Smooth color transition for hover effect */
+}
+
+.songs-table a:hover,
+.songs-table a:focus {
+    color: #1ED760; /* Lighter shade of Spotify green for hover/focus */
+    text-decoration: underline; /* Adds underline on hover/focus for accessibility */
+}
