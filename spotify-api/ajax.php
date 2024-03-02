@@ -17,7 +17,15 @@ $spotify_client_id = $_ENV['SPOTIFY_CLIENT_ID'];
 $spotify_client_secret = $_ENV['SPOTIFY_CLIENT_SECRET'];
 
 
-// Function to fetch user's playlists
+/**
+ * Fetches user's playlists from Spotify API.
+ *
+ * @param string $spotify_client_id The Spotify client ID.
+ * @param string $spotify_client_secret The Spotify client secret.
+ * @param string $spotify_default_user The default Spotify user ID.
+ * @return array The array of playlists information.
+ * @throws Exception If there is an error fetching the access token or playlists.
+ */
 function fetchUserPlaylists($spotify_client_id, $spotify_client_secret, $spotify_default_user)
 {
     $user_id = $_GET['id'] ?? $spotify_default_user;
@@ -62,7 +70,7 @@ function fetchUserPlaylists($spotify_client_id, $spotify_client_secret, $spotify
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Authorization: Bearer {$access_token}",
             "Content-Type: application/json",
-            "User-Agent: YourApp/1.0" // Example User-Agent; adjust as needed
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
         ]);
 
         $api_response = curl_exec($ch);
@@ -82,7 +90,15 @@ function fetchUserPlaylists($spotify_client_id, $spotify_client_secret, $spotify
     return $playlists_infos;
 }
 
-// Function to fetch playlist songs
+/**
+ * Fetches playlist songs from Spotify API.
+ *
+ * @param string $playlist_id The ID of the playlist.
+ * @param string $spotify_client_id The client ID for Spotify API authentication.
+ * @param string $spotify_client_secret The client secret for Spotify API authentication.
+ * @return array The response from the Spotify API containing the playlist songs.
+ * @throws Exception If there is an error fetching the access token or playlist songs.
+ */
 function fetchPlaylistSongs($playlist_id, $spotify_client_id, $spotify_client_secret)
 {
     // Initialize cURL session
@@ -132,6 +148,15 @@ function fetchPlaylistSongs($playlist_id, $spotify_client_id, $spotify_client_se
     return json_decode($response, true);
 }
 
+/**
+ * Fetches the user profile from Spotify API.
+ *
+ * @param string $user_id The ID of the user.
+ * @param string $spotify_client_id The client ID for Spotify API authentication.
+ * @param string $spotify_client_secret The client secret for Spotify API authentication.
+ * @return array The user profile data as an associative array.
+ * @throws Exception If there is an error fetching the access token or user profile.
+ */
 function fetchUserProfile($user_id, $spotify_client_id, $spotify_client_secret)
 {
     // Initialize cURL session for authentication
@@ -185,7 +210,9 @@ function fetchUserProfile($user_id, $spotify_client_id, $spotify_client_secret)
 }
 
 
-// Main execution block
+/**
+ * Main execution block for handling AJAX requests.
+ */
 try {
     if (isset($_GET['action']) && $_GET['action'] == 'fetchUserProfile' && isset($_GET['id'])) {
         // Fetching user profile

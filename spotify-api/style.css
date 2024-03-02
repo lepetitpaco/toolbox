@@ -1,3 +1,9 @@
+/**
+ * This CSS file contains styles for a Spotify API web application.
+ * It includes basic resets and body styling, top bar design, playlist items and songs list,
+ * loader styles, and table styles for songs.
+ */
+
 /* Basic Resets and Body Styling */
 * {
     margin: 0;
@@ -38,7 +44,8 @@ body {
     font-size: 16px;
 }
 
-#userInput button, #resetToDefault {
+#userInput button,
+#resetToDefault {
     padding: 10px 15px;
     border: none;
     border-radius: 20px;
@@ -98,7 +105,6 @@ h1 {
     padding: 5px 0;
 }
 
-
 /* Loader Styles */
 #loader {
     position: fixed;
@@ -124,7 +130,8 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.songs-table th, .songs-table td {
+.songs-table th,
+.songs-table td {
     text-align: left;
     padding: 8px;
     border-bottom: 1px solid #ddd;
@@ -148,7 +155,8 @@ h1 {
     transition: color 0.3s ease; /* Smooth color transition for hover effect */
 }
 
-.songs-table a:hover, .songs-table a:focus {
+.songs-table a:hover,
+.songs-table a:focus {
     color: #1ED760; /* Lighter shade of Spotify green for hover/focus */
     text-decoration: underline; /* Adds underline on hover/focus for accessibility */
 }
