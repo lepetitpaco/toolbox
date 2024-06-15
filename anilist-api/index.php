@@ -357,9 +357,6 @@ $useractivity = getActivity(1, $maxPages);
                         }
                     },
                 ],
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [
